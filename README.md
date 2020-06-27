@@ -6,12 +6,12 @@ A java wrapper for the <https://gofile.io> API
 
 ## Uploading files
 
-#### A quick way to upload files
+### A quick way to upload files
 ```java
 GoFile4j.uploadFiles(new File("filename.txt"), new File("filename1.txt"));
 ```
 
-#### Normal way to upload files
+### Normal way to upload files
 Create a ContentFile - a file and the corresponding content type (example: image.png would be ```ContentType.IMAGE_PNG```)
 The right content type is not necessary for the upload to work. However, images for example won't have a preview on the download page if they don't have the right content type.
 ```java
