@@ -2,7 +2,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b05a911385fa404883066ce138d9b4f3)](https://app.codacy.com/manual/NichtStudioCode/GoFile4j?utm_source=github.com&utm_medium=referral&utm_content=NichtStudioCode/GoFile4j&utm_campaign=Badge_Grade_Settings)
 
-A java wrapper for the https://gofile.io API
+A java wrapper for the <https://gofile.io> API
 
 ## Uploading files
 
