@@ -2,11 +2,9 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/b05a911385fa404883066ce138d9b4f3)](https://app.codacy.com/manual/NichtStudioCode/GoFile4j?utm_source=github.com&utm_medium=referral&utm_content=NichtStudioCode/GoFile4j&utm_campaign=Badge_Grade_Settings)
 
-A java wrapper for the GoFile.io API
+A java wrapper for the https://gofile.io API
 
-## How to use
-
-### Uploading files
+## Uploading files
 
 #### A quick way to upload files
 ```java
@@ -23,7 +21,7 @@ Create a new instance of GoFile4j and provide the ContentFiles you want to uploa
 ```java
 GoFile4j goFile4j = new GoFile4j(file);
 ```
-Optional: set these values
+optional: set these values
 ```java
 goFile4j.setEmail("email@domain.com"); //The email of the account the upload should be associated with (= manage uploads)
 goFile4j.setDescription("description"); //The description shown on the download page
@@ -35,7 +33,7 @@ Upload the files
 goFile4j.upload();
 ```
 
-### Use the FileUploadResult
+## Use the FileUploadResult
 The upload method returns a FileUploadResult, here is how you use it:
 
 The two codes ```getCode()``` and ```getRemovalCode()``` return the values from the API.
