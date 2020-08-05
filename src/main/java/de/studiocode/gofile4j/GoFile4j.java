@@ -1,16 +1,14 @@
 package de.studiocode.gofile4j;
 
+import de.studiocode.gofile4j.request.MultipartFormDataRequest;
 import de.studiocode.gofile4j.response.FileUploadResponse;
 import de.studiocode.gofile4j.response.FindServerResponse;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClients;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
@@ -31,23 +29,17 @@ public class GoFile4j {
 
     private final ContentFile[] files;
     private final String fileServer;
-    private final HttpPost postReq;
+    private final MultipartFormDataRequest request;
 
 
     public GoFile4j(ContentFile... files) throws IOException {
         this.files = files;
-        fileServer = getFileServer();
-        this.postReq = new HttpPost(UPLOAD_URL_FORMAT.format(fileServer));
+        this.fileServer = getFileServer();
+        this.request = new MultipartFormDataRequest(UPLOAD_URL_FORMAT.format(fileServer), StandardCharsets.UTF_8);
     }
-
-    /**
-     * A quick method to upload files
-     *
-     * @param files The files to upload
-     * @return The file upload result
-     */
-    public static FileUploadResult uploadFiles(File... files) throws IOException {
-        return new GoFile4j(Arrays.stream(files).map(ContentFile::new).toArray(ContentFile[]::new)).upload();
+    
+    public GoFile4j(File... files) throws IOException {
+        this(Arrays.stream(files).map(ContentFile::new).toArray(ContentFile[]::new));
     }
 
     /**
@@ -56,9 +48,8 @@ public class GoFile4j {
      * @return The name of the best server available to receive uploads
      */
     private String getFileServer() throws IOException {
-        HttpGet getReq = new HttpGet(FIND_SERVER_URL);
-        InputStream in = HttpClients.createDefault().execute(getReq).getEntity().getContent();
-        return new FindServerResponse(in).getServer();
+        HttpURLConnection findServer = (HttpURLConnection) new URL(FIND_SERVER_URL).openConnection();
+        return new FindServerResponse(findServer.getInputStream()).getServer();
     }
 
     /**
@@ -67,21 +58,18 @@ public class GoFile4j {
      * @return The file upload result
      */
     public FileUploadResult upload() throws IOException {
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        if (email != null) request.addFormField("email", email);
+        if (description != null) request.addFormField("description", description);
+        if (password != null) request.addFormField("password", password);
+        if (tags != null) request.addFormField("tags", tags);
+        if (expire != null) request.addFormField("expire", expire);
+
         for (ContentFile file : files) {
             File f = file.getFile();
-            builder.addBinaryBody("filesUploaded", f, file.getContentType(), f.getName());
+            request.addFormFile("filesUploaded", f, f.getName(), file.getContentType());
         }
-        if (email != null) builder.addTextBody("email", email);
-        if (description != null) builder.addTextBody("description", description);
-        if (password != null) builder.addTextBody("password", password);
-        if (tags != null) builder.addTextBody("tags", tags);
-        if (expire != null) builder.addTextBody("expire", expire);
-        HttpEntity multipart = builder.build();
-        postReq.setEntity(multipart);
 
-        InputStream content = HttpClients.createDefault().execute(postReq).getEntity().getContent();
-        FileUploadResponse response = new FileUploadResponse(content);
+        FileUploadResponse response = new FileUploadResponse(request.complete());
         return new FileUploadResult(response);
     }
 
