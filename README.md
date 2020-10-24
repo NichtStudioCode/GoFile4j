@@ -12,10 +12,10 @@ GoFile4j goFile4j = new GoFile4j(file, file1);
 ```
 optional: set these values
 ```java
-goFile4j.setEmail("email@domain.com"); //The email of the account the upload should be associated with (= manage uploads)
-goFile4j.setDescription("description"); //The description shown on the download page
-goFile4j.setPassword("password"); //The password used to access the download page
-goFile4j.setTags("tag1,tag2,tag3"); //The tags
+goFile4j.setEmail("email@domain.com"); // The email of the account the upload should be associated with (= manage uploads)
+goFile4j.setDescription("description"); // The description shown on the download page
+goFile4j.setPassword("password"); // The password used to access the download page
+goFile4j.setTags("tag1,tag2,tag3"); // The tags
 ```
 Upload the files
 ```java
